@@ -5,4 +5,5 @@ authors = ["jeffbustercase <jefferson_bomfim@outlook.com>"]
 
 [dependencies]
 piston_window = "0.61.0"
+pistoncore-sdl2_window = "0.38.0"
 rand="0.3.15"

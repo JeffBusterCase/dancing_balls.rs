@@ -1,7 +1,10 @@
 extern crate piston_window;
+extern crate sdl2_window;
 extern crate rand;
 
 use rand::random;
+
+use sdl2_window::Sdl2Window;
 
 use piston_window::{
     MouseCursorEvent,
@@ -45,7 +48,6 @@ fn main(){
         pub fn new(x: NUM, y: NUM, dx: NUM, dy: NUM, radius: NUM) -> Self {
             let color : COLOR = COLOR_ARRAY[(random::<f32>() * COLOR_ARRAY.len() as f32).floor() as usize];
             let shape = CircleArc::new(color, radius, 0.0, END_CIRCLE_DRAW);
-
             Circle { x: x, y: y,
                      dx: dx, dy: dy,
                      min_radius: radius,
@@ -82,7 +84,7 @@ fn main(){
 
     let mut mouse = Mouse { x: 0.0, y: 0.0 };
 
-    let mut window : piston_window::PistonWindow;
+    let mut window : piston_window::PistonWindow<Sdl2Window>;
 
     window = piston_window::WindowSettings::new("Dancing Balls",
         [1260,700]).exit_on_esc(true).build().unwrap();
@@ -109,7 +111,6 @@ fn main(){
     }
 
     init(&width, &height, &mut circle_array);
-
     while let Some(e) = window.next() {
         e.mouse_cursor(|x,y| {
             mouse.x = x;
@@ -120,10 +121,7 @@ fn main(){
             for i in 0..circle_array.len() {
                 update_circle(circle_array.index_mut(i), &width, &height, &mouse);
                 // draw circle
-                // MAKE HERE
-                CircleArc::new(circle_array.index(i).shape.color,
-                    circle_array.index(i).shape.radius, 0.0, END_CIRCLE_DRAW)
-                .draw([circle_array.index(i).x,circle_array.index(i).y,1.0,1.0], &c.draw_state, c.transform, g);
+                circle_array.index(i).shape.draw_tri([circle_array.index(i).x,circle_array.index(i).y,1.0,1.0], &c.draw_state, c.transform, g);
             }
         });
     }
